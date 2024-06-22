@@ -14,10 +14,10 @@ def bg_sunny():
 
 def bg_cloudy():
     screen.fill((100,150,200))
-    pygame.draw.circle(screen, (200,200,200), (150,70), 50)
-    pygame.draw.circle(screen, (200,200,200), (80,120), 50)
-    pygame.draw.circle(screen, (200,200,200), (220,120), 50)
-    pygame.draw.rect(screen, (200,200,200), (80,100,150,70))
+    pygame.draw.circle(screen, (200,200,200), (140,70), 50)
+    pygame.draw.circle(screen, (200,200,200), (70,120), 50)
+    pygame.draw.circle(screen, (200,200,200), (210,120), 50)
+    pygame.draw.rect(screen, (200,200,200), (70,100,150,70))
 
 def bg_rainy():
     bg_cloudy()
@@ -32,10 +32,10 @@ def bg_rainy():
 
 def bg_snow():
     screen.fill((150,180,200))
-    pygame.draw.circle(screen, (230,230,230), (150,70), 50)
-    pygame.draw.circle(screen, (230,230,230), (80,120), 50)
-    pygame.draw.circle(screen, (230,230,230), (220,120), 50)
-    pygame.draw.rect(screen, (230,230,230), (80,100,150,70))
+    pygame.draw.circle(screen, (230,230,230), (140,70), 50)
+    pygame.draw.circle(screen, (230,230,230), (70,120), 50)
+    pygame.draw.circle(screen, (230,230,230), (210,120), 50)
+    pygame.draw.rect(screen, (230,230,230), (70,100,150,70))
 
     pygame.draw.circle(screen, (230,230,230), (100,200), 10)
     pygame.draw.circle(screen, (230,230,230), (150,200), 10)
@@ -55,7 +55,7 @@ def data_square():
 def get_data():
     BASE_URL="http://api.openweathermap.org/data/2.5/weather?"
     API_KEY=open("api_key.txt", 'r').read()
-    CITY="London"
+    CITY="Verona"
 
     url = BASE_URL + "appid=" +API_KEY+"&q="+CITY
 
@@ -67,35 +67,61 @@ def f_to_c(f):
     return(int((f - 32) / 5/9))
 
 def display_info():
+    w_condition=data['weather'][0]['main']
+    set_background(w_condition)
     city=data['name']
     font = pygame.font.SysFont('arial', 40)
     text=font.render(city, True, (0,0,0))
     screen.blit(text, (280,50))
-    w_condition=data['weather'][0]['main']
 
+    
     text=font.render("Weather: ", True, (0,0,0))
     screen.blit(text, (290,110))
     text=font.render(w_condition, True, (0,0,0))
-    screen.blit(text, (450,110))
+    screen.blit(text, (460,110))
 
     temp=f_to_c(float(data['main']['temp']))
-    pygame.draw.rect(screen, (255,200,240),(290,200,70,70))
-    pygame.draw.rect(screen, (0,0,80),(290,200,70,70),3)
+    pygame.draw.rect(screen, (255,200,240),(290,200,85,70))
+    pygame.draw.rect(screen, (0,0,80),(290,200,85,70),3)
     font = pygame.font.SysFont('arial', 30)
     text=font.render("Temperature: ", True, (0,0,0))
-    screen.blit(text, (290,150))
+    screen.blit(text, (290,160))
     font = pygame.font.SysFont('arial', 50)
     text=font.render(str(temp)+'°', True, (0,0,0))
-    screen.blit(text, (300,210))
+    screen.blit(text, (295,210))
 
     temp_max=f_to_c(float(data['main']['temp_max']))
-    pygame.draw.rect(screen, (200,200,255),(440,200,70,70))
-    pygame.draw.rect(screen, (0,0,80),(440,200,70,70),3)
+    pygame.draw.rect(screen, (200,200,255),(440,200,85,70))
+    pygame.draw.rect(screen, (0,0,80),(440,200,85,70),3)
     text=font.render(str(temp_max)+'°', True, (0,0,0))
-    screen.blit(text, (450,210))
+    screen.blit(text, (445,210))
     pygame.draw.rect(screen, (200,200,255),(540,230,20,40))
     pygame.draw.rect(screen, (0,0,0),(540,230,20,40),3)
-    # pygame.draw.polygon(screen, ())
+    pygame.draw.polygon(screen, (200,200,255),[(550,200),(530,230),(570,230)])
+    pygame.draw.polygon(screen, (0,0,0),[(550,200),(530,230),(570,230)], 3)
+    pygame.draw.rect(screen, (200,200,255),(543,220,14,20))
+
+    temp_min=f_to_c(float(data['main']['temp_min']))
+    pygame.draw.rect(screen, (255,230,200),(600,200,85,70))
+    pygame.draw.rect(screen, (0,0,80),(600,200,85,70),3)
+    text=font.render(str(temp_min)+'°', True, (0,0,0))
+    screen.blit(text, (605,210))
+    pygame.draw.rect(screen, (255,230,200),(700,200,20,40))
+    pygame.draw.rect(screen, (0,0,0),(700,200,20,40),3)
+    pygame.draw.polygon(screen, (255,230,200),[(710,270),(690,240),(730,240)])
+    pygame.draw.polygon(screen, (0,0,0),[(710,270),(690,240),(730,240)], 3)
+    pygame.draw.rect(screen, (255,230,200),(703,230,14,20))
+
+def set_background(w):
+    if(w=="Clouds"):
+        bg_cloudy()
+    elif(w=="Rain"):
+        bg_rainy()
+    elif(w=='Snow'):
+        bg_snow()
+    elif(w=='Clear'):
+        bg_sunny()
+    data_square()
 
 
 
