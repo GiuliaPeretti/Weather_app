@@ -1,0 +1,33 @@
+{"coord":  
+    {"lon": 11.0333, 
+    "lat": 45.4167}, 
+"weather": [
+    {"id": 801, 
+    "main": "Clouds", 
+    "description": "few clouds", 
+    "icon": "02n"}], 
+    
+"base": "stations", 
+"main": 
+    {"temp": 296.31, 
+    "feels_like": 296.25, 
+    "temp_min": 295.42, 
+    "temp_max": 296.77, 
+    "pressure": 1007, 
+    "humidity": 60}, 
+"visibility": 10000, 
+"wind": 
+    {"speed": 2.57, 
+    "deg": 210}, 
+"clouds": {"all": 20}, 
+"dt": 1719089462, 
+"sys": 
+    {"type": 1, 
+    "id": 6776, 
+    "country": "IT", 
+    "sunrise": 1719026864, 
+    "sunset": 1719083282}, 
+"timezone": 7200, 
+"id": 3164526, 
+"name": "Provincia di Verona", 
+"cod": 200}

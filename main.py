@@ -52,18 +52,55 @@ def data_square():
     pygame.draw.rect(screen, (255,255,255),(280,100,470,450))
     pygame.draw.rect(screen, (0,0,80),(280,100,470,450),3)
 
-
-
 def get_data():
     BASE_URL="http://api.openweathermap.org/data/2.5/weather?"
     API_KEY=open("api_key.txt", 'r').read()
-    CITY="Verona"
+    CITY="London"
 
     url = BASE_URL + "appid=" +API_KEY+"&q="+CITY
 
     response = requests.get(url).json()
 
     return(response)
+
+def f_to_c(f):
+    return(int((f - 32) / 5/9))
+
+def display_info():
+    city=data['name']
+    font = pygame.font.SysFont('arial', 40)
+    text=font.render(city, True, (0,0,0))
+    screen.blit(text, (280,50))
+    w_condition=data['weather'][0]['main']
+
+    text=font.render("Weather: ", True, (0,0,0))
+    screen.blit(text, (290,110))
+    text=font.render(w_condition, True, (0,0,0))
+    screen.blit(text, (450,110))
+
+    temp=f_to_c(float(data['main']['temp']))
+    pygame.draw.rect(screen, (255,200,240),(290,200,70,70))
+    pygame.draw.rect(screen, (0,0,80),(290,200,70,70),3)
+    font = pygame.font.SysFont('arial', 30)
+    text=font.render("Temperature: ", True, (0,0,0))
+    screen.blit(text, (290,150))
+    font = pygame.font.SysFont('arial', 50)
+    text=font.render(str(temp)+'°', True, (0,0,0))
+    screen.blit(text, (300,210))
+
+    temp_max=f_to_c(float(data['main']['temp_max']))
+    pygame.draw.rect(screen, (200,200,255),(440,200,70,70))
+    pygame.draw.rect(screen, (0,0,80),(440,200,70,70),3)
+    text=font.render(str(temp_max)+'°', True, (0,0,0))
+    screen.blit(text, (450,210))
+    pygame.draw.rect(screen, (200,200,255),(540,230,20,40))
+    pygame.draw.rect(screen, (0,0,0),(540,230,20,40),3)
+    # pygame.draw.polygon(screen, ())
+
+
+
+
+
 
 pygame.init()
 clock=pygame.time.Clock()
@@ -74,6 +111,7 @@ bg_sunny()
 data_square()
 data=get_data()
 print(data)
+display_info()
 run  = True
 
 while run:
