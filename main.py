@@ -4,6 +4,9 @@ import requests
 
 def draw_background():
     screen.fill(BACKGROUND_COLOR)
+    bg_sunny()
+    data_square()
+    text_bar('',False)
 
 def bg_sunny():
     screen.fill((100,150,255))
@@ -48,23 +51,29 @@ def bg_snow():
     pygame.draw.circle(screen, (230,230,230), (125,275), 10)
     pygame.draw.circle(screen, (230,230,230), (175,275), 10)
 
-def data_square():
-    pygame.draw.rect(screen, (255,255,255),(280,100,470,450))
-    pygame.draw.rect(screen, (0,0,80),(280,100,470,450),3)
+def bg_thunder():
+    bg_cloudy()
 
-def get_data():
+    pygame.draw.polygon(screen, (255,255,0), [(110,180),(80,245),(130,225),(170,180)])
+    pygame.draw.polygon(screen, (255,255,0), [(80,245),(130,225),(170,230),(120,250)])
+    pygame.draw.polygon(screen, (255,255,0), [(170,230),(120,250),(90,320)])
+
+def data_square():
+    pygame.draw.rect(screen, (255,255,255),(280,105,470,175))
+    pygame.draw.rect(screen, (0,0,80),(280,105,470,175),3)
+
+def get_data(city):
     BASE_URL="http://api.openweathermap.org/data/2.5/weather?"
     API_KEY=open("api_key.txt", 'r').read()
-    CITY="Verona"
 
-    url = BASE_URL + "appid=" +API_KEY+"&q="+CITY
+    url = BASE_URL + "appid=" +API_KEY+"&q="+city
 
     response = requests.get(url).json()
 
     return(response)
 
-def f_to_c(f):
-    return(int((f - 32) / 5/9))
+def k_to_c(f):
+    return(int(f-273.15))
 
 def display_info():
     w_condition=data['weather'][0]['main']
@@ -80,7 +89,7 @@ def display_info():
     text=font.render(w_condition, True, (0,0,0))
     screen.blit(text, (460,110))
 
-    temp=f_to_c(float(data['main']['temp']))
+    temp=k_to_c(float(data['main']['temp']))
     pygame.draw.rect(screen, (255,200,240),(290,200,85,70))
     pygame.draw.rect(screen, (0,0,80),(290,200,85,70),3)
     font = pygame.font.SysFont('arial', 30)
@@ -90,7 +99,7 @@ def display_info():
     text=font.render(str(temp)+'°', True, (0,0,0))
     screen.blit(text, (295,210))
 
-    temp_max=f_to_c(float(data['main']['temp_max']))
+    temp_max=k_to_c(float(data['main']['temp_max']))
     pygame.draw.rect(screen, (200,200,255),(440,200,85,70))
     pygame.draw.rect(screen, (0,0,80),(440,200,85,70),3)
     text=font.render(str(temp_max)+'°', True, (0,0,0))
@@ -101,7 +110,7 @@ def display_info():
     pygame.draw.polygon(screen, (0,0,0),[(550,200),(530,230),(570,230)], 3)
     pygame.draw.rect(screen, (200,200,255),(543,220,14,20))
 
-    temp_min=f_to_c(float(data['main']['temp_min']))
+    temp_min=k_to_c(float(data['main']['temp_min']))
     pygame.draw.rect(screen, (255,230,200),(600,200,85,70))
     pygame.draw.rect(screen, (0,0,80),(600,200,85,70),3)
     text=font.render(str(temp_min)+'°', True, (0,0,0))
@@ -121,9 +130,26 @@ def set_background(w):
         bg_snow()
     elif(w=='Clear'):
         bg_sunny()
+    elif(w=='Thunderstorm'):
+        bg_thunder()
     data_square()
 
+def text_bar(city,b):
+    if b:
+        color=(100,200,100)
+    else:
+        color=(255,255,255)
+    pygame.draw.rect(screen, (255,255,255),(280,290,70,40))
+    pygame.draw.rect(screen, (0,0,80),(280,290,70,40),3)
+    font = pygame.font.SysFont('arial', 30)
+    text=font.render("City", True, (0,0,0))
+    screen.blit(text, (288,290))
+    
+    pygame.draw.rect(screen, color,(347,290,400,40))
+    pygame.draw.rect(screen, (0,0,80),(347,290,400,40),3)
 
+    text=font.render(str(city), True, (0,0,0))
+    screen.blit(text, (355,290))
 
 
 
@@ -133,13 +159,13 @@ clock=pygame.time.Clock()
 screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT), flags, vsync=1)
 pygame.display.set_caption('Weather app')
 font = pygame.font.SysFont('arial', 20)
-bg_sunny()
-data_square()
-data=get_data()
-print(data)
-display_info()
-run  = True
 
+draw_background()
+
+
+
+run  = True
+text=''
 while run:
 
     for event in pygame.event.get():
@@ -148,7 +174,13 @@ while run:
         if event.type == pygame.MOUSEBUTTONDOWN:
             x,y=pygame.mouse.get_pos()
         if (event.type == pygame.KEYDOWN):
-            pass
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_BACKSPACE and text!='':
+                    text = text[:-1]
+                else:
+                    text += event.unicode
+                text_bar(text, False)
+                print(text)
     pygame.display.flip()
     clock.tick(30)
     
