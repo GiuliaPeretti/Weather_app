@@ -21,33 +21,59 @@ def bg_cloudy():
 
 def bg_rainy():
     bg_cloudy()
+    pygame.draw.polygon(screen, (0,0,200), [(85,246), (114,246), (100,210)])
     pygame.draw.circle(screen, (0,0,200), (100,250), 15)
-    pygame.draw.polygon()
 
+    pygame.draw.polygon(screen, (0,0,200), [(185,246), (214,246), (200,210)])
+    pygame.draw.circle(screen, (0,0,200), (200,250), 15)
 
+    pygame.draw.polygon(screen, (0,0,200), [(135,296), (164,296), (150,260)])
+    pygame.draw.circle(screen, (0,0,200), (150,300), 15)
 
+def bg_snow():
+    screen.fill((150,180,200))
+    pygame.draw.circle(screen, (230,230,230), (150,70), 50)
+    pygame.draw.circle(screen, (230,230,230), (80,120), 50)
+    pygame.draw.circle(screen, (230,230,230), (220,120), 50)
+    pygame.draw.rect(screen, (230,230,230), (80,100,150,70))
 
+    pygame.draw.circle(screen, (230,230,230), (100,200), 10)
+    pygame.draw.circle(screen, (230,230,230), (150,200), 10)
+    pygame.draw.circle(screen, (230,230,230), (200,200), 10)
+    pygame.draw.circle(screen, (230,230,230), (125,225), 10)
+    pygame.draw.circle(screen, (230,230,230), (175,225), 10)
+    pygame.draw.circle(screen, (230,230,230), (100,250), 10)
+    pygame.draw.circle(screen, (230,230,230), (150,250), 10)
+    pygame.draw.circle(screen, (230,230,230), (200,250), 10)
+    pygame.draw.circle(screen, (230,230,230), (125,275), 10)
+    pygame.draw.circle(screen, (230,230,230), (175,275), 10)
+
+def data_square():
+    pygame.draw.rect(screen, (255,255,255),(280,100,470,450))
+    pygame.draw.rect(screen, (0,0,80),(280,100,470,450),3)
 
 
 
 def get_data():
     BASE_URL="http://api.openweathermap.org/data/2.5/weather?"
     API_KEY=open("api_key.txt", 'r').read()
-    CITY="London"
+    CITY="Verona"
 
     url = BASE_URL + "appid=" +API_KEY+"&q="+CITY
 
     response = requests.get(url).json()
 
-    print(response)
+    return(response)
 
 pygame.init()
 clock=pygame.time.Clock()
 screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT), flags, vsync=1)
 pygame.display.set_caption('Weather app')
 font = pygame.font.SysFont('arial', 20)
-bg_cloudy()
-# get_data()
+bg_sunny()
+data_square()
+data=get_data()
+print(data)
 run  = True
 
 while run:
