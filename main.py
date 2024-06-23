@@ -159,9 +159,9 @@ clock=pygame.time.Clock()
 screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT), flags, vsync=1)
 pygame.display.set_caption('Weather app')
 font = pygame.font.SysFont('arial', 20)
-
+text_bar_width=((347,347+400),(290,290+40))
 draw_background()
-
+selected=False
 
 
 run  = True
@@ -173,13 +173,28 @@ while run:
             run = False
         if event.type == pygame.MOUSEBUTTONDOWN:
             x,y=pygame.mouse.get_pos()
+            if(x>=text_bar_width[0][0] and x<=text_bar_width[0][1] and y>=text_bar_width[1][0] and y<=text_bar_width[1][1]):
+                selected=True
+                text_bar(text, True)
+            else:
+                selected=False
+                text_bar(text, False)
         if (event.type == pygame.KEYDOWN):
-            if event.type == pygame.KEYDOWN:
+            if event.type == pygame.KEYDOWN and selected:
                 if event.key == pygame.K_BACKSPACE and text!='':
                     text = text[:-1]
+                elif(event.key == pygame.K_RETURN):
+                    try:
+                        data=get_data(text)
+                        display_info()
+                    except:
+                        draw_background()
+                    text=''
+                    selected=False
+                    text_bar(text,selected)
                 else:
                     text += event.unicode
-                text_bar(text, False)
+                text_bar(text, selected)
                 print(text)
     pygame.display.flip()
     clock.tick(30)
